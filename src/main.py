@@ -2,6 +2,7 @@ import asyncio
 import logging
 from datetime import datetime
 from pathlib import Path
+from src.config.targets import TargetManager
 
 from src.config import Config
 from src.scrapers.reddit_scraper import RedditScraper
@@ -76,5 +77,30 @@ async def run_pipeline(keywords: list[str], platforms: list[str] = None):
     return enriched_leads
 
 if __name__ == "__main__":
-    keywords = ["looking for agency", "need help with", "recommend a tool"]
-    asyncio.run(run_pipeline(keywords))
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="GnawLead Pipeline")
+    parser.add_argument('--campaign', type=str, help='Nom de la campagne à exécuter')
+    parser.add_argument('--list', action='store_true', help='Lister toutes les campagnes')
+    args = parser.parse_args()
+    
+    target_manager = TargetManager()
+    
+    if args.list:
+        campaigns = target_manager.list_campaigns()
+        print("Campagnes disponibles:")
+        for name in campaigns:
+            campaign = target_manager.get_campaign(name)
+            status = "✅ Active" if campaign.get('active') else "❌ Inactive"
+            print(f"  - {name}: {status} ({len(campaign.get('keywords', []))} keywords)")
+    else:
+        campaign = target_manager.get_campaign(args.campaign)
+        if campaign:
+            print(f"🐀 Lancement de la campagne: {args.campaign or target_manager.targets['default_campaign']}")
+            asyncio.run(run_pipeline(
+                keywords=campaign['keywords'],
+                platforms=campaign['platforms'],
+                limit=campaign.get('limit', 50)
+            ))
+        else:
+            print("❌ Aucune campagne valide trouvée. Vérifie targets.json")

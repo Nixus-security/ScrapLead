@@ -1,0 +1,17 @@
+{
+  "campaigns": {
+    "agence_marketing": {
+      "keywords": ["looking for marketing agency", "need help with ads", "recommend a growth agency"],
+      "platforms": ["reddit", "twitter", "linkedin"],
+      "limit": 50,
+      "active": true
+    },
+    "saas_tools": {
+      "keywords": ["best tool for", "alternative to", "looking for software"],
+      "platforms": ["reddit", "twitter"],
+      "limit": 30,
+      "active": false
+    }
+  },
+  "default_campaign": "agence_marketing"
+}

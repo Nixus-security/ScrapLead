@@ -1,0 +1,8 @@
+asyncpraw>=7.7.1
+playwright>=1.40.0
+aiohttp>=3.9.1
+pandas>=2.1.4
+python-dotenv>=1.0.0
+discord.py>=2.3.2
+httpx>=0.25.2
+pydantic>=2.5.3
