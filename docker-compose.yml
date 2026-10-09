@@ -1,0 +1,22 @@
+services:
+  pipeline:
+    build: .
+    env_file: .env
+    volumes:
+      - .//app/data
+      - ./logs:/app/logs
+      - ./targets.json:/app/targets.json
+    command: python -m src.main --campaign agence_marketing
+    restart: "no"
+
+  bot:
+    build: .
+    env_file: .env
+    volumes:
+      - .//app/data
+      - ./logs:/app/logs
+      - ./targets.json:/app/targets.json
+    command: python -m src.discord_bot.bot
+    restart: unless-stopped
+    depends_on:
+      - pipeline
